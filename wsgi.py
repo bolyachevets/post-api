@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from api.post_api import app
-from config import get_config
 
 if __name__ == '__main__':
-    app.config.from_object(get_config())
     app.run(debug=False)

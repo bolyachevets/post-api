@@ -16,6 +16,7 @@ from flask import Flask, request
 from google.cloud import storage
 from google.oauth2 import service_account
 import json
+import os
 
 app = Flask(__name__)
 
@@ -26,7 +27,7 @@ def post_api():
     data = request.json
     bucket_name = data['bucket']
     project_id = data['project']
-    creds_str = app.config.get('SA_KEY')
+    creds_str = os.environ['SA_DOC_AI_KEY']
     cred_dict = json.loads(creds_str)
     credentials = service_account.Credentials.from_service_account_info(cred_dict)
     storage_client = storage.Client(project=project_id, credentials=credentials)
