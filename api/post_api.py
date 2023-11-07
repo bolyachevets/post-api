@@ -41,5 +41,7 @@ def post_api():
             ret = blob.download_as_text()
             json_object = json.loads(ret)
             res.append(json_object)
-    res_json = json.dumps(res)
-    return res_json
+            blob.delete()
+    # res_json = json.dumps(res)
+    resp = {"files": len(res)}
+    return str(resp)
