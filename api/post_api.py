@@ -12,12 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, request, jsonify
+from flask import Flask, request
+from google.cloud import storage
+from google.oauth2 import service_account
+import json
 
 app = Flask(__name__)
 
 @app.route('/api/v1/post', methods=['POST'])
 def post_api():
     """return post body"""
+
     data = request.json
-    return data
+    bucket_name = data['bucket']
+    project_id = data['project']
+    creds_str = app.config.get('SA_KEY')
+    cred_dict = json.loads(creds_str)
+    credentials = service_account.Credentials.from_service_account_info(cred_dict)
+    storage_client = storage.Client(project=project_id, credentials=credentials)
+
+    bucket = storage_client.bucket(bucket_name)
+
+    res = []
+    blobs=list(bucket.list_blobs())
+    for blob in blobs:
+        if not blob.name.endswith("/"):
+            ret = blob.download_as_text()
+            json_object = json.loads(ret)
+            res.append(json_object)
+    res_json = json.dumps(res)
+    return res_json
