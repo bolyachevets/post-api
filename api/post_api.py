@@ -40,7 +40,10 @@ def post_api():
         if not blob.name.endswith("/"):
             ret = blob.download_as_text()
             json_object = json.loads(ret)
-            res.append(json_object)
-            blob.delete()
+            fields = json_object['entities']
+            text = json_object['text']
+            json_object2 = {"fields": fields, "text": text}
+            res.append(json_object2)
+            # blob.delete()
     res_json = json.dumps(res)
     return res_json
