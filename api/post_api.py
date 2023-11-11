@@ -42,6 +42,5 @@ def post_api():
             json_object = json.loads(ret)
             res.append(json_object)
             blob.delete()
-    # res_json = json.dumps(res)
-    resp = {"files": len(res)}
-    return str(resp)
+    res_json = json.dumps(res)
+    return res_json
